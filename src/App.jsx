@@ -1,52 +1,53 @@
-import './App.css';
-import { useState } from "react"
-// data
-import News from './data/news.json';
-import navItemsData from './data/navItems.json';
-// components
-import AppNav from './components/AppNav/AppNav.jsx';
-import ArticleTeaser from './components/ArticleTeaser/ArticleTeaser.jsx'
-import Article from './components/Article/Article.jsx'
+import { useState } from 'react'
 
-// seed values
-const randomArticleIndex = Math.floor(Math.random() * News.length);
-const randomArticle = News[randomArticleIndex];
+import './App.css'
+
+import NavBar from './components/NavBar'
+import HomePage from './pages/HomePage'
+import ArticlePage from './pages/ArticlePage'
+
+import NewsData from '../data/news.json'
+import NavItemsData from '../data/navItems.json'
+
+import { HashRouter as Router, Routes, Route } from 'react-router-dom';
+
 
 function App() {
-  // states
-  const [navItems, setNavItems] = useState(navItemsData)
-  const [article, setArticle] = useState({
-    id: randomArticleIndex,
-    title: randomArticle.title,
-    abstract: randomArticle.abstract,
-    byline: randomArticle.byline,
-    image: randomArticle.multimedia.length ? randomArticle.multimedia[0].url : null,
-    created_date: randomArticle.created_date
+
+  const [navItems, setNavItems] = useState(NavItemsData)
+  const [articles, setArticles] = useState(NewsData.map((article, index) => {
+    return {
+      id: index,
+      title: article.title,
+      abstract: article.abstract,
+      byline: article.byline,
+      image: article.multimedia.length ? article.multimedia[0] : null,
+      created_date: article.created_date
+    }
   })
+  )
 
-  // renders
+  const getArticleById = (articleId) => {
+    return articles[articleId]
+  }
+
   return (
-    <div>
-      <h1>AppNav Component</h1>
-      <hr />
+    <div className="App">
+      <NavBar items={navItems} />
 
-      <AppNav navItems={navItems} handleNavClick={(clickedItem) => { console.log(clickedItem) }} />
+      <Router>
+        <Routes>
 
-      <h1>ArticleTeaser Component</h1>
-      <hr />
+          <Route path='/' element={<HomePage articles={articles} />} />
+          <Route path='/articles/:articleID' element={<ArticlePage getArticleById={getArticleById} />} />
 
-      <ArticleTeaser
-        id={article.id}
-        title={article.title}
-        created_date={article.created_date}
-        handleTitleClick={(articleID) => { console.log(articleID) }} />
+        </Routes>
+      </Router>
 
-      <h1>Article Component</h1>
-      <hr />
+      {/* <ArticleList articles={articles}/> */}
 
-      <Article {...article} />
     </div>
-  );
+  )
 }
 
-export default App;
+export default App

@@ -1,17 +1,12 @@
-import ArticleList from '../components/ArticleList/ArticleList.jsx'
-import News from '../data/news.json';
+import ArticleList from "../components/ArticleList"
 
-function HomePage() {
-  const handleTitleClick = (articleID) => console.log("TODO - use React Router\'s history.push() method to change the page to /article/${articleID}");
 
+function HomePage({ articles }) {
   return (
     <div>
-      <ArticleList 
-        articles={News} 
-        handleTitleClick={handleTitleClick} 
-      />
+      <ArticleList articles={articles} />
     </div>
-  );
+  )
 }
 
-export default HomePage;
+export default HomePage
